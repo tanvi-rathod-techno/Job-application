@@ -1,4 +1,3 @@
-// src/components/layouts/MultiStepForm.tsx
 import { useState } from "react";
 import { PersonalInfoFormData } from "../../validation/personalInfoSchema";
 import { ResumeCoverFormData } from "../../validation/resumeCoverSchema";
@@ -49,15 +48,35 @@ const MultiStepForm = () => {
 
   const handleStep5Next = (data: SetPasswordFormData) => {
     setSetPasswordData(data);
-    setStep(6); // Show Thank You
+    const applicationData = {
+      personalInfo,
+      resumeCover,
+      jobPreferences,
+      availability,
+      setPassword: data,
+    };
+    localStorage.setItem("jobApplication", JSON.stringify(applicationData));  
+    setStep(6); 
   };
+
+
+  const stepTitles = [
+    "Step 1: Personal Information",
+    "Step 2: Resume & Cover Letter",
+    "Step 3: Job Preferences",
+    "Step 4: Availability",
+    "Step 5: Set Your Password",
+    "🎉 Application Summary",
+  ];
 
   return (
     <div className="flex">
       <Sidebar selectedStep={step - 1} onSelectStep={(s) => setStep(s + 1)} />
 
       <div className="bg-white rounded-lg shadow p-6 w-full max-w-2xl mx-auto">
-        <h2 className="text-xl font-bold mb-4">Job Application Form</h2>
+      <h2 className="text-xl font-bold mb-4">{stepTitles[step - 1]}</h2>
+
+
 
         {step === 1 && (
           <Step1PersonalInfo
@@ -96,13 +115,7 @@ const MultiStepForm = () => {
         )}
 
         {step === 6 && (
-          <Step6_Summary
-            personalInfo={personalInfo}
-            resumeCover={resumeCover}
-            jobPreferences={jobPreferences}
-            availability={availability}
-            setPasswordData={setPasswordData}
-          />
+          <Step6_Summary />
         )}
       </div>
     </div>

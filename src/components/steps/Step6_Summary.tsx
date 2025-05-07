@@ -1,26 +1,19 @@
-// src/components/steps/Step6_Summary.tsx
+import { useEffect, useState } from "react";
 
-import { PersonalInfoFormData } from "../../validation/personalInfoSchema";
-import { ResumeCoverFormData } from "../../validation/resumeCoverSchema";
-import { JobPreferencesFormData } from "../../validation/jobPreferencesSchema";
-import { AvailabilityFormData } from "../../validation/availabilitySchema";
-import { SetPasswordFormData } from "../../validation/setPasswordSchema";
+const Step6_Summary = () => {
+  const [formData, setFormData] = useState<any>(null);
 
-type Step6Props = {
-  personalInfo: PersonalInfoFormData | null;
-  resumeCover: ResumeCoverFormData | null;
-  jobPreferences: JobPreferencesFormData | null;
-  availability: AvailabilityFormData | null;
-  setPasswordData: SetPasswordFormData | null;
-};
+  useEffect(() => {
+    const storedData = localStorage.getItem("jobApplication");
+    if (storedData) {
+      setFormData(JSON.parse(storedData));
+    }
+  }, []);
 
-const Step6_Summary = ({
-  personalInfo,
-  resumeCover,
-  jobPreferences,
-  availability,
-  setPasswordData,
-}: Step6Props) => {
+  if (!formData) return <p>Loading summary...</p>;
+
+  const { personalInfo, resumeCover, jobPreferences, availability, setPasswordData } = formData;
+
   return (
     <div className="space-y-4">
       <h3 className="text-xl font-semibold text-green-700 text-center">
@@ -36,9 +29,9 @@ const Step6_Summary = ({
         <div><strong>Email:</strong> {personalInfo?.email}</div>
         <div><strong>Phone:</strong> {personalInfo?.phoneNumber}</div>
 
-        {/* <div><strong>Preferred Role:</strong> {jobPreferences?.preferredRole}</div>
-        <div><strong>Location:</strong> {jobPreferences?.locationPreference}</div>
-        <div><strong>Employment Type:</strong> {jobPreferences?.employmentType}</div> */}
+        <div><strong>Preferred Role:</strong> {jobPreferences?.desiredRole}</div>
+        <div><strong>Location:</strong> {jobPreferences?.location}</div>
+        <div><strong>Employment Type:</strong> {jobPreferences?.jobType}</div>
 
         <div><strong>Start Date:</strong> {availability?.preferredStartDate}</div>
         <div><strong>Availability:</strong> {availability?.availability}</div>
@@ -49,26 +42,14 @@ const Step6_Summary = ({
         {resumeCover?.resume && (
           <div>
             <strong>Resume:</strong>{" "}
-            <a
-              href={URL.createObjectURL(resumeCover.resume)}
-              download={resumeCover.resume.name}
-              className="text-blue-600 underline"
-            >
-              {resumeCover.resume.name}
-            </a>
+            <span className="text-gray-700 italic">{resumeCover.resume.name}</span>
           </div>
         )}
 
         {resumeCover?.coverLetter && (
           <div>
             <strong>Cover Letter:</strong>{" "}
-            <a
-              href={URL.createObjectURL(resumeCover.coverLetter)}
-              download={resumeCover.coverLetter.name}
-              className="text-blue-600 underline"
-            >
-              {resumeCover.coverLetter.name}
-            </a>
+            <span className="text-gray-700 italic">{resumeCover.coverLetter.name}</span>
           </div>
         )}
       </div>

@@ -6,7 +6,7 @@ import {
 } from "../../validation/resumeCoverSchema";
 import Label from "../../components/ui/Label";
 import Input from "../../components/ui/Input";
-import Button from "../../components/ui/Button"; // ✅ Import your custom Button
+import Button from "../../components/ui/Button";
 
 type Step2Props = {
   onNext: (data: ResumeCoverFormData) => void;

@@ -19,9 +19,7 @@ const Step6_Summary = () => {
       <h3 className="text-xl font-semibold text-green-700 text-center">
         🎉 Thank you for applying!
       </h3>
-      <p className="text-sm text-center text-gray-600">
-        Here's a summary of your application:
-      </p>
+     
 
       <div className="bg-gray-100 p-4 rounded text-sm space-y-2">
         <div><strong>First Name:</strong> {personalInfo?.firstName}</div>

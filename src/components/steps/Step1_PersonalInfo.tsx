@@ -16,6 +16,7 @@ const Step1PersonalInfo = ({ onNext, onBack, currentStep }: { onNext: (data: Per
   });
 
   const onSubmit = (data: PersonalInfoFormData) => {
+   
     onNext(data);
   };
 

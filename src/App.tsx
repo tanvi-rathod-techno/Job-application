@@ -14,7 +14,7 @@ const App = () => {
         {/* Pass the selectedStep and onSelectStep props to Sidebar */}
         {/* <Sidebar selectedStep={selectedStep} onSelectStep={setSelectedStep} /> */}
         
-        <main className="">
+        <main className="flex-1 bg-gray-50">
           <MultiStepForm />
         </main>
       </div>

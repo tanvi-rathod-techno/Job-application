@@ -17,6 +17,7 @@ import {
   SetPasswordFormData
 } from "../../validation/setPasswordSchema";
 
+
 import Step1PersonalInfo from "../steps/Step1_PersonalInfo";
 import Step2ResumeCover from "../steps/Step2_ResumeCover";
 import Step3JobPreferences from "../steps/Step3_JobPreferences";
@@ -78,14 +79,17 @@ const MultiStepForm = () => {
   ];
 
   return (
+    
     <div className="min-h-screen flex flex-col md:flex-row">
       {/* Sidebar */}
       <Sidebar selectedStep={step - 1} onSelectStep={(s) => setStep(s + 1)} />
 
 
       {/* Form Section */}
-      <main className="flex-1 flex justify-center items-center bg-gray-50 px-4 py-8">
-        <div className="w-full max-w-2xl bg-white shadow-md rounded-lg p-6">
+   
+        <div className="w-full w-2xl bg-white shadow-md rounded-lg p-6">
+          {/* Centered Header */}
+       
           <h2 className="text-xl font-bold mb-4">{stepTitles[step - 1]}</h2>
 
           {step === 1 && <Step1PersonalInfo onNext={handleStep1Next} onBack={() => setStep(0)} currentStep={step} />}
@@ -95,7 +99,7 @@ const MultiStepForm = () => {
           {step === 5 && <Step5_SetPassword onSubmit={handleStep5Next} onBack={() => setStep(4)} />}
           {step === 6 && <Step6_Summary />}
         </div>
-      </main>
+   
     </div>
   );
 };

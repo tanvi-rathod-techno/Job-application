@@ -42,21 +42,6 @@ const Step4_Availability = ({ onNext, onBack }: Step4Props) => {
         )}
       </div>
 
-      {/* Availability */}
-      <div>
-        <Label>Available for</Label>
-        <RadioGroup
-          name="availability"
-          options={[
-            { label: "Full-time", value: "Full-time" },
-            { label: "Part-time", value: "Part-time" },
-            { label: "Both", value: "Both" },
-          ]}
-          register={register}
-          error={errors.availability?.message}
-        />
-      </div>
-
       {/* Notes */}
       <div>
         <Label htmlFor="availabilityNotes">Additional Availability Notes</Label>

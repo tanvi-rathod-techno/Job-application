@@ -59,7 +59,7 @@ const Step3_JobPreferences = ({ onNext, onBack }: Step3Props) => {
       <div>
         <Label htmlFor="location">Preferred Location</Label>
         <Select
-          label="Preferred Location"
+          label=""
           options={[
             { label: "Remote", value: "Remote" },
             { label: "New York", value: "New York" },

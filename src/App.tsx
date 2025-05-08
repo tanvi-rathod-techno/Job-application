@@ -1,22 +1,25 @@
-import Header from './components/layouts/Header';
-import Footer from './components/layouts/Footer';
-import Sidebar from './components/layouts/Sidebar';
+// src/App.tsx
+import { useState } from 'react';
+// import Header from './components/layouts/Header';
+// import Sidebar from './components/layouts/Sidebar';  // Ensure Sidebar is imported
 import MultiStepForm from './components/layouts/MultiStepForm';
 
-function App() {
+const App = () => {
+  const [selectedStep, setSelectedStep] = useState(0); // Track the selected step
+
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <div className="flex flex-1 min-h-[calc(100vh-64px-40px)]">
-        <Sidebar />
-        <main className="flex-1 p-6 bg-gray-50">
+    <div className="">
+      {/* <Header /> */}
+      <div className="">
+        {/* Pass the selectedStep and onSelectStep props to Sidebar */}
+        {/* <Sidebar selectedStep={selectedStep} onSelectStep={setSelectedStep} /> */}
+        
+        <main className="flex-1 bg-gray-50">
           <MultiStepForm />
         </main>
       </div>
-      <Footer />
     </div>
   );
-}
-
+};
 
 export default App;

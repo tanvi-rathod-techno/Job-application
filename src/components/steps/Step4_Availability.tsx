@@ -20,10 +20,11 @@ const Step4_Availability = ({ onNext, onBack }: Step4Props) => {
     handleSubmit,
     formState: { errors },
   } = useForm<AvailabilityFormData>({
-    resolver: zodResolver(availabilitySchema),
+    
   });
 
   const onSubmit = (data: AvailabilityFormData) => {
+    console.log("Step 4 data:", data);
     onNext(data);
   };
 
@@ -42,22 +43,7 @@ const Step4_Availability = ({ onNext, onBack }: Step4Props) => {
         )}
       </div>
 
-      {/* Availability (radio buttons using RadioGroup) */}
-      <div>
-        <Label>Available for</Label>
-        <RadioGroup
-          name="availability"
-          options={[
-            { label: "Full-time", value: "Full-time" },
-            { label: "Part-time", value: "Part-time" },
-            { label: "Both", value: "Both" },
-          ]}
-          register={register}
-          error={errors.availability?.message}
-        />
-      </div>
-
-      {/* Availability Notes (custom Textarea) */}
+      {/* Notes */}
       <div>
         <Label htmlFor="availabilityNotes">Additional Availability Notes</Label>
         <Textarea
@@ -68,7 +54,23 @@ const Step4_Availability = ({ onNext, onBack }: Step4Props) => {
         />
       </div>
 
-      {/* Navigation Buttons */}
+      {/* Agreement Checkbox */}
+      <div className="flex items-start space-x-2">
+        <input
+          type="checkbox"
+          id="agreeToTerms"
+          {...register("agreeToTerms")}
+          className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded"
+        />
+        <Label htmlFor="agreeToTerms" className="font-medium">
+          I agree to the terms and conditions.
+        </Label>
+      </div>
+      {errors.agreeToTerms && (
+        <p className="text-red-500 text-sm">{errors.agreeToTerms.message}</p>
+      )}
+
+      {/* Navigation */}
       <div className="flex justify-between">
         <Button type="button" onClick={onBack}>
           Back

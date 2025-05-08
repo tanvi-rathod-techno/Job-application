@@ -9,14 +9,13 @@ import Button from "../ui/Button";
 const Step1PersonalInfo = ({ onNext, onBack, currentStep }: { onNext: (data: PersonalInfoFormData) => void, onBack: () => void, currentStep: number }) => {
   const {
     register,
-    handleSubmit,
+    handleSubmit, 
     formState: { errors },
   } = useForm<PersonalInfoFormData>({
     resolver: zodResolver(personalInfoSchema),
   });
 
   const onSubmit = (data: PersonalInfoFormData) => {
-   
     onNext(data);
   };
 

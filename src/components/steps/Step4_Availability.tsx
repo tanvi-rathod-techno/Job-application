@@ -24,7 +24,6 @@ const Step4_Availability = ({ onNext, onBack }: Step4Props) => {
   });
 
   const onSubmit = (data: AvailabilityFormData) => {
-    console.log("Step 4 data:", data);
     onNext(data);
   };
 

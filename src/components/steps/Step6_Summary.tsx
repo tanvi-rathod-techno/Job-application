@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-// @ts-ignore
+import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
+
 const html2pdf = require("html2pdf.js");
 
 const Step6_Summary = () => {
@@ -29,69 +30,38 @@ const Step6_Summary = () => {
 
   if (!formData) return <p>Loading summary...</p>;
 
-  const {
-    personalInfo,
-    resumeCover,
-    jobPreferences,
-    availability,
-    setPasswordData,
-  } = formData;
+  const { personalInfo, resumeCover, jobPreferences, availability } = formData;
+
+  const resume = JSON.parse(localStorage.getItem("resume") || '{}');
+  const coverLetter = JSON.parse(localStorage.getItem("coverLetter") || '{}');
 
   return (
     <div className="space-y-6">
-      <h3 className="text-xl font-semibold text-green-700 text-center">
-        🎉 Thank you for applying!
-      </h3>
-
       <div className="flex justify-center">
+        <h3 className="text-xl font-semibold text-green-700 text-center">
+          Thank you for applying!
+        </h3>
         <button
           onClick={handleDownloadPDF}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          className="bg-green-600 text-white px-1 py-1 ml-2 rounded hover:bg-green-700 transition flex items-center justify-between gap-2"
         >
-          Download Resume as PDF
+          <span> PDF</span>
+          <ArrowDownTrayIcon className="h-5 w-5" />
         </button>
       </div>
 
-      {/* Resume */}
       <div className="flex justify-center py-10 bg-gray-100">
-        <div
-          ref={pdfRef}
-          className="bg-white w-full max-w-4xl flex shadow-2xl rounded-xl overflow-hidden"
-        >
+        <div ref={pdfRef} className="bg-white w-full max-w-4xl flex shadow-2xl rounded-xl overflow-hidden">
           {/* Sidebar */}
           <div className="w-1/3 bg-gray-900 text-white p-6 space-y-6">
-            {/* Profile Photo */}
-            <div className="flex justify-center">
-              <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white">
-                <img
-                  src="https://via.placeholder.com/150"
-                  alt="Profile"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-
-            {/* About Me */}
-            <div>
-              <h3 className="text-lg font-semibold border-b border-gray-600 pb-1 mb-2">
-                About Me
-              </h3>
-              <p className="text-sm leading-relaxed">
-                Passionate applicant ready to bring creativity and dedication to new opportunities.
-              </p>
-            </div>
-
-            {/* Contact */}
             <div>
               <h3 className="text-lg font-semibold border-b border-gray-600 pb-1 mb-2">Contact</h3>
               <ul className="text-sm space-y-1">
                 <li>📞 {personalInfo?.phoneNumber}</li>
                 <li>✉️ {personalInfo?.email}</li>
-                <li>📍 123 Anywhere Street, Any City</li>
               </ul>
             </div>
 
-            {/* Skills */}
             <div>
               <h3 className="text-lg font-semibold border-b border-gray-600 pb-1 mb-2">Skills</h3>
               <ul className="text-sm list-disc list-inside space-y-1">
@@ -100,71 +70,28 @@ const Step6_Summary = () => {
                 <li>{jobPreferences?.desiredRole}</li>
               </ul>
             </div>
-
-            {/* Language */}
-            <div>
-              <h3 className="text-lg font-semibold border-b border-gray-600 pb-1 mb-2">Language</h3>
-              <p className="text-sm">English</p>
-            </div>
           </div>
 
           {/* Main Content */}
           <div className="w-2/3 p-8 space-y-6 text-gray-800">
-            {/* Header */}
             <div>
-              <h1 className="text-3xl font-bold">
-                {personalInfo?.firstName} {personalInfo?.lastName}
-              </h1>
+              <h1 className="text-3xl font-bold">{personalInfo?.firstName} {personalInfo?.lastName}</h1>
               <p className="text-gray-500 text-lg">{jobPreferences?.desiredRole}</p>
             </div>
 
-            {/* Education */}
-            <div>
-              <h2 className="text-xl font-semibold text-gray-700 mb-2">🎓 Education</h2>
-              <div className="space-y-2 text-sm">
-                <div>
-                  <p className="font-medium">Sample University (2015–2019)</p>
-                  <p>Bachelor’s Degree — Design</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Experience */}
-            <div>
-              <h2 className="text-xl font-semibold text-gray-700 mb-2">💼 Experience</h2>
-              <div className="space-y-2 text-sm">
-                <div>
-                  <p className="font-medium">Senior Designer (2020–2023)</p>
-                  <ul className="list-disc list-inside">
-                    <li>Created 100+ designs</li>
-                    <li>Led branding projects</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            {/* Availability */}
             <div>
               <h2 className="text-xl font-semibold text-gray-700 mb-2">📅 Availability</h2>
               <p><strong>Start:</strong> {availability?.preferredStartDate}</p>
-              <p><strong>Available:</strong> {availability?.availability}</p>
-              <p><strong>Agreed to Terms:</strong> {availability?.agreeToTerms ? "Yes" : "No"}</p>
+              <p><strong>Availability Notes:</strong> {availability?.availabilityNotes}</p>
             </div>
 
-            {/* Attachments */}
             <div>
               <h2 className="text-xl font-semibold text-gray-700 mb-2">📎 Attachments</h2>
-              {resumeCover?.resume && (
-                <p>
-                  <strong>Resume:</strong>{" "}
-                  <span className="italic text-gray-700">{resumeCover.resume.name}</span>
-                </p>
+              {resume?.name && (
+                <p><strong>Resume:</strong> <span className="italic text-gray-700">{resume.name}</span></p>
               )}
-              {resumeCover?.coverLetter && (
-                <p>
-                  <strong>Cover Letter:</strong>{" "}
-                  <span className="italic text-gray-700">{resumeCover.coverLetter.name}</span>
-                </p>
+              {coverLetter?.name && (
+                <p><strong>Cover Letter:</strong> <span className="italic text-gray-700">{coverLetter.name}</span></p>
               )}
             </div>
           </div>

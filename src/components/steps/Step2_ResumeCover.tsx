@@ -1,9 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  resumeCoverSchema,
-  ResumeCoverFormData,
-} from "../../validation/resumeCoverSchema";
+import { resumeCoverSchema, ResumeCoverFormData } from "../../validation/resumeCoverSchema";
 import Label from "../../components/ui/Label";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
@@ -22,7 +19,32 @@ const Step2_ResumeCover = ({ onNext, onBack }: Step2Props) => {
     resolver: zodResolver(resumeCoverSchema),
   });
 
-  const onSubmit = (data: ResumeCoverFormData) => {
+  const onSubmit = async (data: ResumeCoverFormData) => {
+    const storeFileData = async (file: File | null, key: string) => {
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const fileBase64 = reader.result as string;
+          localStorage.setItem(key, JSON.stringify({
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            content: fileBase64,
+          }));
+        };
+        reader.readAsDataURL(file); // Convert file to base64
+      }
+    };
+
+    if (data.resume?.[0]) {
+      await storeFileData(data.resume[0], "resume");
+    }
+
+    if (data.coverLetter?.[0]) {
+      await storeFileData(data.coverLetter[0], "coverLetter");
+    }
+
+    // Proceed to the next step
     onNext(data);
   };
 
@@ -55,20 +77,8 @@ const Step2_ResumeCover = ({ onNext, onBack }: Step2Props) => {
       </div>
 
       <div className="flex justify-between">
-        <Button
-          type="button"
-          onClick={onBack}
-          
-        >
-          Back
-        </Button>
-
-        <Button
-          type="submit"
-        
-        >
-          Next
-        </Button>
+        <Button type="button" onClick={onBack}>Back</Button>
+        <Button type="submit">Next</Button>
       </div>
     </form>
   );

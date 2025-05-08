@@ -1,22 +1,9 @@
-import {
-  useState
-} from "react";
-import {
-  PersonalInfoFormData
-} from "../../validation/personalInfoSchema";
-import {
-  ResumeCoverFormData
-} from "../../validation/resumeCoverSchema";
-import {
-  JobPreferencesFormData
-} from "../../validation/jobPreferencesSchema";
-import {
-  AvailabilityFormData
-} from "../../validation/availabilitySchema";
-import {
-  SetPasswordFormData
-} from "../../validation/setPasswordSchema";
-
+import { useState } from "react";
+import { PersonalInfoFormData } from "../../validation/personalInfoSchema";
+import { ResumeCoverFormData } from "../../validation/resumeCoverSchema";
+import { JobPreferencesFormData } from "../../validation/jobPreferencesSchema";
+import { AvailabilityFormData } from "../../validation/availabilitySchema";
+import { SetPasswordFormData } from "../../validation/setPasswordSchema";
 
 import Step1PersonalInfo from "../steps/Step1_PersonalInfo";
 import Step2ResumeCover from "../steps/Step2_ResumeCover";
@@ -30,11 +17,11 @@ import Sidebar from "../layouts/Sidebar";
 const MultiStepForm = () => {
   const [step, setStep] = useState(1);
 
-  const [personalInfo, setPersonalInfo] = useState < PersonalInfoFormData | null > (null);
-  const [resumeCover, setResumeCover] = useState < ResumeCoverFormData | null > (null);
-  const [jobPreferences, setJobPreferences] = useState < JobPreferencesFormData | null > (null);
-  const [availability, setAvailability] = useState < AvailabilityFormData | null > (null);
-  const [setPasswordData, setSetPasswordData] = useState < SetPasswordFormData | null > (null);
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfoFormData | null>(null);
+  const [resumeCover, setResumeCover] = useState<ResumeCoverFormData | null>(null);
+  const [jobPreferences, setJobPreferences] = useState<JobPreferencesFormData | null>(null);
+  const [availability, setAvailability] = useState<AvailabilityFormData | null>(null);
+  const [setPasswordData, setSetPasswordData] = useState<SetPasswordFormData | null>(null);
 
   const handleStep1Next = (data: PersonalInfoFormData) => {
     setPersonalInfo(data);
@@ -79,27 +66,22 @@ const MultiStepForm = () => {
   ];
 
   return (
-    
     <div className="min-h-screen flex flex-col md:flex-row">
       {/* Sidebar */}
       <Sidebar selectedStep={step - 1} onSelectStep={(s) => setStep(s + 1)} />
 
-
       {/* Form Section */}
-   
-        <div className="w-full w-2xl bg-white shadow-md rounded-lg p-6">
-          {/* Centered Header */}
-       
-          <h2 className="text-xl font-bold mb-4">{stepTitles[step - 1]}</h2>
+      <div className="w-full w-2xl bg-white shadow-md rounded-lg p-6">
+        {/* Centered Header */}
+        <h2 className="text-xl font-bold mb-4">{stepTitles[step - 1]}</h2>
 
-          {step === 1 && <Step1PersonalInfo onNext={handleStep1Next} onBack={() => setStep(0)} currentStep={step} />}
-          {step === 2 && <Step2ResumeCover onNext={handleStep2Next} onBack={() => setStep(1)} />}
-          {step === 3 && <Step3JobPreferences onNext={handleStep3Next} onBack={() => setStep(2)} />}
-          {step === 4 && <Step4_Availability onNext={handleStep4Next} onBack={() => setStep(3)} />}
-          {step === 5 && <Step5_SetPassword onSubmit={handleStep5Next} onBack={() => setStep(4)} />}
-          {step === 6 && <Step6_Summary />}
-        </div>
-   
+        {step === 1 && <Step1PersonalInfo onNext={handleStep1Next} onBack={() => setStep(0)} currentStep={step} />}
+        {step === 2 && <Step2ResumeCover onNext={handleStep2Next} onBack={() => setStep(1)} />}
+        {step === 3 && <Step3JobPreferences onNext={handleStep3Next} onBack={() => setStep(2)} />}
+        {step === 4 && <Step4_Availability onNext={handleStep4Next} onBack={() => setStep(3)} />}
+        {step === 5 && <Step5_SetPassword onSubmit={handleStep5Next} onBack={() => setStep(4)} />}
+        {step === 6 && <Step6_Summary />}
+      </div>
     </div>
   );
 };

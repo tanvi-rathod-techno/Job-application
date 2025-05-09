@@ -1,12 +1,10 @@
-// src/components/steps/Step4_Availability.tsx
-
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { availabilitySchema, AvailabilityFormData } from "../../validation/availabilitySchema";
 import Label from "../ui/Label";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
-import RadioGroup from "../ui/RadioGroup";
 import Textarea from "../ui/Textarea";
 
 type Step4Props = {
@@ -18,12 +16,40 @@ const Step4_Availability = ({ onNext, onBack }: Step4Props) => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<AvailabilityFormData>({
-    
+    resolver: zodResolver(availabilitySchema),
+    defaultValues: {
+      preferredStartDate: "",
+      availabilityNotes: "",
+      agreeToTerms: true,
+    },
   });
 
+  // Load saved form data from localStorage when component mounts
+  useEffect(() => {
+    const stored = localStorage.getItem("jobApplication");
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (parsed.availability) {
+        reset(parsed.availability);
+      }
+    }
+  }, [reset]);
+
   const onSubmit = (data: AvailabilityFormData) => {
+    const stored = localStorage.getItem("jobApplication");
+    const existing = stored ? JSON.parse(stored) : {};
+
+    localStorage.setItem(
+      "jobApplication",
+      JSON.stringify({
+        ...existing,
+        availability: data,
+      })
+    );
+
     onNext(data);
   };
 
@@ -38,7 +64,9 @@ const Step4_Availability = ({ onNext, onBack }: Step4Props) => {
           {...register("preferredStartDate")}
         />
         {errors.preferredStartDate && (
-          <p className="text-red-500 text-sm">{errors.preferredStartDate.message}</p>
+          <p className="text-red-500 text-sm">
+            {errors.preferredStartDate.message}
+          </p>
         )}
       </div>
 

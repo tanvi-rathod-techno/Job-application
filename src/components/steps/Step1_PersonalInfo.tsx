@@ -1,21 +1,53 @@
 // /src/components/Step1PersonalInfo.tsx
+
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { personalInfoSchema, PersonalInfoFormData } from "../../validation/personalInfoSchema";
+import {
+  personalInfoSchema,
+  PersonalInfoFormData,
+} from "../../validation/personalInfoSchema";
 import Input from "../ui/Input";
 import Label from "../ui/Label";
 import Button from "../ui/Button";
 
-const Step1PersonalInfo = ({ onNext, onBack, currentStep }: { onNext: (data: PersonalInfoFormData) => void, onBack: () => void, currentStep: number }) => {
+const Step1PersonalInfo = ({
+  onNext,
+  onBack,
+  currentStep,
+}: {
+  onNext: (data: PersonalInfoFormData) => void;
+  onBack: () => void;
+  currentStep: number;
+}) => {
   const {
     register,
-    handleSubmit, 
+    handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<PersonalInfoFormData>({
     resolver: zodResolver(personalInfoSchema),
   });
 
+  // Load saved data from localStorage on component mount
+  useEffect(() => {
+    const stored = localStorage.getItem("jobApplication");
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (parsed.personalInfo) {
+        reset(parsed.personalInfo); 
+      }
+    }
+  }, [reset]);
+
   const onSubmit = (data: PersonalInfoFormData) => {
+    const stored = localStorage.getItem("jobApplication");
+    const existingData = stored ? JSON.parse(stored) : {};
+    const updated = {
+      ...existingData,
+      personalInfo: data,
+    };
+    localStorage.setItem("jobApplication", JSON.stringify(updated));
     onNext(data);
   };
 
@@ -55,25 +87,15 @@ const Step1PersonalInfo = ({ onNext, onBack, currentStep }: { onNext: (data: Per
 
       <div className="flex justify-between">
         {currentStep > 1 ? (
-            <Button
-            type="button"
-            onClick={onBack}
-        
-            >
+          <Button type="button" onClick={onBack}>
             Back
-            </Button>
+          </Button>
         ) : (
-            <div /> // Keeps spacing when Back is hidden
+          <div /> // Keeps spacing when Back is hidden
         )}
 
-        <Button
-            type="submit"
-            
-        >
-            Next
-        </Button>
-        </div>
-
+        <Button type="submit">Next</Button>
+      </div>
     </form>
   );
 };

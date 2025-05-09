@@ -1,3 +1,6 @@
+// /src/components/steps/Step3_JobPreferences.tsx
+
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -20,12 +23,38 @@ const Step3_JobPreferences = ({ onNext, onBack }: Step3Props) => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<JobPreferencesFormData>({
     resolver: zodResolver(jobPreferencesSchema),
+    defaultValues: {
+      desiredRole: "",
+      jobType: undefined,
+      location: undefined,
+      willingToRelocate: false,
+      expectedSalary: undefined,
+    },
   });
 
+  // On mount, load stored values and reset form
+  useEffect(() => {
+    const stored = localStorage.getItem("jobApplication");
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (parsed.jobPreferences) {
+        reset(parsed.jobPreferences);
+      }
+    }
+  }, [reset]);
+
   const onSubmit = (data: JobPreferencesFormData) => {
+    // Save to localStorage
+    const stored = localStorage.getItem("jobApplication");
+    const existing = stored ? JSON.parse(stored) : {};
+    localStorage.setItem(
+      "jobApplication",
+      JSON.stringify({ ...existing, jobPreferences: data })
+    );
     onNext(data);
   };
 
@@ -57,16 +86,17 @@ const Step3_JobPreferences = ({ onNext, onBack }: Step3Props) => {
 
       {/* Location */}
       <div>
-        <Label htmlFor="location">Preferred Location</Label>
+       
         <Select
-          label=""
+          id="location"
+          label="Select Location"
+          {...register("location")}
           options={[
             { label: "Remote", value: "Remote" },
             { label: "New York", value: "New York" },
             { label: "San Francisco", value: "San Francisco" },
             { label: "Austin", value: "Austin" },
           ]}
-          {...register("location")}
           error={errors.location?.message}
         />
       </div>
@@ -88,7 +118,9 @@ const Step3_JobPreferences = ({ onNext, onBack }: Step3Props) => {
           {...register("expectedSalary")}
         />
         {errors.expectedSalary && (
-          <p className="text-red-500 text-sm">{errors.expectedSalary.message}</p>
+          <p className="text-red-500 text-sm">
+            {errors.expectedSalary.message}
+          </p>
         )}
       </div>
 

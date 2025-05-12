@@ -16,44 +16,54 @@ import Sidebar from "../layouts/Sidebar";
 
 const MultiStepForm = () => {
   const [step, setStep] = useState(1);
+  const [maxStepReached, setMaxStepReached] = useState(1);
 
+  // Local states for step-wise data
   const [personalInfo, setPersonalInfo] = useState<PersonalInfoFormData | null>(null);
   const [resumeCover, setResumeCover] = useState<ResumeCoverFormData | null>(null);
   const [jobPreferences, setJobPreferences] = useState<JobPreferencesFormData | null>(null);
   const [availability, setAvailability] = useState<AvailabilityFormData | null>(null);
   const [setPasswordData, setSetPasswordData] = useState<SetPasswordFormData | null>(null);
 
+  // Step Handlers
   const handleStep1Next = (data: PersonalInfoFormData) => {
     setPersonalInfo(data);
     setStep(2);
+    setMaxStepReached((prev) => Math.max(prev, 2));
   };
 
   const handleStep2Next = (data: ResumeCoverFormData) => {
     setResumeCover(data);
     setStep(3);
+    setMaxStepReached((prev) => Math.max(prev, 3));
   };
 
   const handleStep3Next = (data: JobPreferencesFormData) => {
     setJobPreferences(data);
     setStep(4);
+    setMaxStepReached((prev) => Math.max(prev, 4));
   };
 
   const handleStep4Next = (data: AvailabilityFormData) => {
     setAvailability(data);
     setStep(5);
+    setMaxStepReached((prev) => Math.max(prev, 5)); 
   };
 
   const handleStep5Next = (data: SetPasswordFormData) => {
     setSetPasswordData(data);
+
+    // Save full form data to localStorage
     const applicationData = {
       personalInfo,
       resumeCover,
       jobPreferences,
       availability,
-      setPassword: data,
+    //  setPassword: data,
     };
     localStorage.setItem("jobApplication", JSON.stringify(applicationData));
     setStep(6);
+    setMaxStepReached((prev) => Math.max(prev, 6));
   };
 
   const stepTitles = [
@@ -65,22 +75,65 @@ const MultiStepForm = () => {
     "Application Summary",
   ];
 
+  const renderStep = () => {
+    switch (step) {
+      case 1:
+        return (
+          <Step1PersonalInfo
+            onNext={handleStep1Next}
+            onBack={() => setStep(0)}
+            currentStep={step}
+          />
+        );
+      case 2:
+        return (
+          <Step2ResumeCover
+            onNext={handleStep2Next}
+            onBack={() => setStep(1)}
+          />
+        );
+      case 3:
+        return (
+          <Step3JobPreferences
+            onNext={handleStep3Next}
+            onBack={() => setStep(2)}
+          />
+        );
+      case 4:
+        return (
+          <Step4_Availability
+            onNext={handleStep4Next}
+            onBack={() => setStep(3)}
+          />
+        );
+        case 5:
+          return (
+            <Step5_SetPassword
+              onSubmit={handleStep5Next}
+              onBack={() => setStep(4)}
+              defaultValues={setPasswordData ?? { password: "", confirmPassword: "" }}
+            />
+          );
+      case 6:
+        return <Step6_Summary />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       {/* Sidebar */}
-      <Sidebar selectedStep={step - 1} onSelectStep={(s) => setStep(s + 1)} />
+      <Sidebar selectedStep={step - 1}  onSelectStep={(s) => {
+          if (s + 1 <= maxStepReached) {
+            setStep(s + 1);
+          }
+        }} />
 
-      {/* Form Section */}
+      {/* Main Form Section */}
       <div className="w-full w-2xl bg-white shadow-md rounded-lg p-6">
-        {/* Centered Header */}
         <h2 className="text-xl font-bold mb-4">{stepTitles[step - 1]}</h2>
-
-        {step === 1 && <Step1PersonalInfo onNext={handleStep1Next} onBack={() => setStep(0)} currentStep={step} />}
-        {step === 2 && <Step2ResumeCover onNext={handleStep2Next} onBack={() => setStep(1)} />}
-        {step === 3 && <Step3JobPreferences onNext={handleStep3Next} onBack={() => setStep(2)} />}
-        {step === 4 && <Step4_Availability onNext={handleStep4Next} onBack={() => setStep(3)} />}
-        {step === 5 && <Step5_SetPassword onSubmit={handleStep5Next} onBack={() => setStep(4)} />}
-        {step === 6 && <Step6_Summary />}
+        {renderStep()}
       </div>
     </div>
   );

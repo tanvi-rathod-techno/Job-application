@@ -79,7 +79,10 @@ const Step1PersonalInfo = ({
 
       <div>
         <Label htmlFor="phoneNumber">Phone Number</Label>
-        <Input id="phoneNumber" type="text" {...register("phoneNumber")} />
+        <Input id="phoneNumber" type="tel"  inputMode="numeric" {...register("phoneNumber")} onInput={(e) => {
+        const input = e.target as HTMLInputElement;
+        input.value = input.value.replace(/\D/g, ""); // remove non-digits
+        }}  />
         {errors.phoneNumber && (
           <span className="text-red-500 text-xs">{errors.phoneNumber.message}</span>
         )}

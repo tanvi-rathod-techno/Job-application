@@ -59,7 +59,7 @@ const MultiStepForm = () => {
       resumeCover,
       jobPreferences,
       availability,
-      setPassword: data,
+    //  setPassword: data,
     };
     localStorage.setItem("jobApplication", JSON.stringify(applicationData));
     setStep(6);
@@ -106,13 +106,14 @@ const MultiStepForm = () => {
             onBack={() => setStep(3)}
           />
         );
-      case 5:
-        return (
-          <Step5_SetPassword
-            onSubmit={handleStep5Next}
-            onBack={() => setStep(4)}
-          />
-        );
+        case 5:
+          return (
+            <Step5_SetPassword
+              onSubmit={handleStep5Next}
+              onBack={() => setStep(4)}
+              defaultValues={setPasswordData ?? { password: "", confirmPassword: "" }}
+            />
+          );
       case 6:
         return <Step6_Summary />;
       default:
